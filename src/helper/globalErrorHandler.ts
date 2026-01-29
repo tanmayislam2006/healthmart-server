@@ -1,0 +1,35 @@
+import { ErrorRequestHandler } from "express";
+
+type IGenericErrorMessages = {
+  path: string | number;
+  message: string;
+};
+
+const globalErrorHandler: ErrorRequestHandler = (
+  error,
+  req,
+  res,
+  next
+) => {
+  let statusCode = 500;
+  let message = "Something went wrong";
+  let errorMessage: IGenericErrorMessages[] = [];
+
+  if (error instanceof Error) {
+    message = error.message;
+    errorMessage = [
+      {
+        path: "",
+        message: error.message,
+      },
+    ];
+  }
+
+  res.status(statusCode).json({
+    success: false,
+    message,
+    errorMessage,
+  });
+};
+
+export default globalErrorHandler;
