@@ -3,7 +3,6 @@ import ApiError from "../../helper/apiError";
 import httpStatus from "http-status";
 import { OrderStatus } from "../../generated/prisma/enums";
 
-
 const getAllMedicineBySeller = async (sellerId: string) => {
   return prisma.medicine.findMany({
     where: { sellerId },
@@ -20,7 +19,7 @@ const addMedicine = async (
     price: number;
     stock: number;
     manufacturer?: string;
-  }
+  },
 ) => {
   return prisma.medicine.create({
     data: {
@@ -40,7 +39,7 @@ const updateMedicineInfo = async (
     price: number;
     stock: number;
     manufacturer?: string;
-  }>
+  }>,
 ) => {
   const medicine = await prisma.medicine.findUnique({ where: { id } });
 
@@ -100,7 +99,7 @@ const getSellerOrders = async (sellerId: string) => {
 const updateOrderStatus = async (
   sellerId: string,
   orderId: string,
-  status: OrderStatus
+  status: OrderStatus,
 ) => {
   const order = await prisma.order.findUnique({
     where: { id: orderId },
@@ -118,13 +117,13 @@ const updateOrderStatus = async (
   }
 
   const isSellerOrder = order.orderItems.some(
-    (item) => item.medicine.sellerId === sellerId
+    (item) => item.medicine.sellerId === sellerId,
   );
 
   if (!isSellerOrder) {
     throw new ApiError(
       httpStatus.FORBIDDEN,
-      "You are not allowed to update this order"
+      "You are not allowed to update this order",
     );
   }
 
@@ -133,7 +132,6 @@ const updateOrderStatus = async (
     data: { status },
   });
 };
-
 
 export const sellerService = {
   getAllMedicineBySeller,
