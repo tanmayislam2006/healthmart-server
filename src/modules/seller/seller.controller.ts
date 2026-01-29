@@ -5,11 +5,13 @@ import httpStatus from "http-status";
 
 const getAllMedicineBySeller = catchAsync(async (req, res) => {
   const userId = req?.user?.id;
+
   const result = await sellerService.getAllMedicineBySeller(userId as string);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Successfully Fetch All Data",
+    message: "Seller medicines fetched successfully",
     data: result,
   });
 });
@@ -18,13 +20,15 @@ const addMedicine = catchAsync(async (req, res) => {
   const userId = req?.user?.id;
 
   const result = await sellerService.addMedicine(userId as string, req.body);
+
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
-    message: "Successfully add medicine",
+    message: "Medicine added successfully",
     data: result,
   });
 });
+
 const updateMedicineInfo = catchAsync(async (req, res) => {
   const { id } = req.params;
   const userId = req?.user?.id;
@@ -34,10 +38,11 @@ const updateMedicineInfo = catchAsync(async (req, res) => {
     id as string,
     req.body,
   );
+
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     success: true,
-    message: "Successfully Update medicine",
+    message: "Medicine updated successfully",
     data: result,
   });
 });
@@ -50,37 +55,43 @@ const deleteMedicine = catchAsync(async (req, res) => {
     userId as string,
     id as string,
   );
+
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     success: true,
-    message: "Successfully Delete medicine",
+    message: "Medicine deleted successfully",
     data: result,
   });
 });
 
 const getSellerOrders = catchAsync(async (req, res) => {
   const userId = req?.user?.id;
+
   const result = await sellerService.getSellerOrders(userId as string);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Successfully Fetch All Orders",
+    message: "Seller orders fetched successfully",
     data: result,
   });
 });
+
 const updateOrderStatus = catchAsync(async (req, res) => {
   const { id } = req.params;
+  const { status } = req.body;
   const userId = req?.user?.id;
 
   const result = await sellerService.updateOrderStatus(
     userId as string,
     id as string,
-    req.body,
+    status,
   );
+
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     success: true,
-    message: "Successfully Update Order",
+    message: "Order status updated successfully",
     data: result,
   });
 });
@@ -91,5 +102,5 @@ export const sellerController = {
   updateMedicineInfo,
   deleteMedicine,
   getSellerOrders,
-  updateOrderStatus
+  updateOrderStatus,
 };
