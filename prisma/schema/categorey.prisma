@@ -8,7 +8,10 @@ model Categories {
   name        String
   description String?
   status      CategoryStatus @default(ACTIVE)
-  createdBy   String
   createdAt   DateTime       @default(now())
-  updateAt    DateTime       @updatedAt
+  updatedAt   DateTime       @updatedAt
+
+  medicines   Medicine[]
+
+  @@unique([name])
 }

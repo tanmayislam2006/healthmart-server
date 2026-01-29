@@ -1,4 +1,6 @@
 import { ErrorRequestHandler } from "express";
+import ApiError from "./apiError";
+
 
 type IGenericErrorMessages = {
   path: string | number;
@@ -15,7 +17,16 @@ const globalErrorHandler: ErrorRequestHandler = (
   let message = "Something went wrong";
   let errorMessage: IGenericErrorMessages[] = [];
 
-  if (error instanceof Error) {
+  if (error instanceof ApiError) {
+    statusCode = error.statusCode;
+    message = error.message;
+    errorMessage = [
+      {
+        path: "",
+        message: error.message,
+      },
+    ];
+  } else if (error instanceof Error) {
     message = error.message;
     errorMessage = [
       {

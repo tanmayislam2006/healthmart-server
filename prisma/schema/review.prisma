@@ -1,0 +1,16 @@
+model Review {
+    id         String   @id @default(uuid())
+    customerId String
+    orderId    String
+    medicineId String
+    rating     Int
+    content    String
+    createdAt  DateTime @default(now())
+
+    customer User     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+    order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+    medicine Medicine @relation(fields: [medicineId], references: [id], onDelete: Cascade)
+
+    @@index([customerId])
+    @@index([medicineId])
+}
