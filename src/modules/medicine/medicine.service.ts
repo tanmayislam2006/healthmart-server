@@ -10,6 +10,14 @@ const getCategory = async () => {
 
 const getMedicine = async () => {
   return prisma.medicine.findMany({
+    include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
+    },
+
     orderBy: {
       createdAt: "desc",
     },
