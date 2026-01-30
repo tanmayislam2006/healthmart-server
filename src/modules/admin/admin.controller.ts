@@ -74,6 +74,33 @@ const updateCategory = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getAllSellerRequests = catchAsync(async (req, res) => {
+  const result = await adminService.getAllSellerRequests();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Seller requests fetched successfully",
+    data: result,
+  });
+});
+
+const updateSellerRequestStatus = catchAsync(async (req, res) => {
+  const { sellerId } = req.params;
+  const { status } = req.body;
+
+  const result = await adminService.updateSellerRequestStatus(
+    sellerId as string,
+    status,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Seller request updated successfully",
+    data: result,
+  });
+});
 
 export const adminController = {
   getAllUser,
@@ -83,4 +110,6 @@ export const adminController = {
   createCategory,
   getAllCategories,
   updateCategory,
+  getAllSellerRequests,
+  updateSellerRequestStatus
 };

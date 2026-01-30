@@ -1,5 +1,6 @@
 import {
   CategoryStatus,
+  SRequest,
   UserRole,
   UserStatus,
 } from "../../generated/prisma/enums";
@@ -113,6 +114,64 @@ const updateCategory = async (
     data,
   });
 };
+
+const getAllSellerRequests = async () => {
+  return prisma.sellerRequest.findMany({
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+};
+
+const updateSellerRequestStatus = async (
+  requestId: string,
+  status: SRequest,
+) => {
+  const request = await prisma.sellerRequest.findUnique({
+    where: { id: requestId },
+  });
+
+  if (!request) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Seller request not found");
+  }
+
+  if (request.status !== SRequest.PENDING) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "Seller request already processed",
+    );
+  }
+
+  return prisma.$transaction(async (tx) => {
+    const updatedRequest = await tx.sellerRequest.update({
+      where: { id: requestId },
+      data: {
+        status,
+      },
+    });
+
+    if (status === SRequest.APPROVED) {
+      await tx.user.update({
+        where: { id: request.userId },
+        data: {
+          role: UserRole.SELLER,
+        },
+      });
+    }
+
+    return updatedRequest;
+  });
+};
 export const adminService = {
   getAllUser,
   updateUser,
@@ -121,4 +180,6 @@ export const adminService = {
   createCategory,
   getAllCategories,
   updateCategory,
+  getAllSellerRequests,
+  updateSellerRequestStatus
 };
