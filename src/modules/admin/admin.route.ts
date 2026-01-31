@@ -35,7 +35,7 @@ router.get(
   auth(UserRole.ADMIN),
   adminController.getAllSellerRequests,
 );
-router.get(
+router.patch(
   "/update/:sellerId",
   auth(UserRole.ADMIN),
   adminController.updateSellerRequestStatus,

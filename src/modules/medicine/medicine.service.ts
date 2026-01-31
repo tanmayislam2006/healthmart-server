@@ -27,6 +27,14 @@ const getMedicine = async () => {
 const getMedicineById = async (id: string) => {
   return prisma.medicine.findUniqueOrThrow({
     where: { id },
+    include: {
+      reviews: {
+        select: {
+          content: true,
+          rating: true,
+        },
+      },
+    },
   });
 };
 
