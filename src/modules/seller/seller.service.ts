@@ -6,6 +6,13 @@ import { OrderStatus } from "../../generated/prisma/enums";
 const getAllMedicineBySeller = async (sellerId: string) => {
   return prisma.medicine.findMany({
     where: { sellerId },
+    include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
+    },
     orderBy: { createdAt: "desc" },
   });
 };
@@ -85,10 +92,24 @@ const getSellerOrders = async (sellerId: string) => {
     include: {
       orderItems: {
         include: {
-          medicine: true,
+          medicine: {
+            select: { 
+              name: true,
+              category: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
         },
       },
-      customer: true,
+      customer: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",

@@ -1,7 +1,7 @@
 import ApiError from "../../helper/apiError";
 import httpStatus from "http-status";
 import { prisma } from "../../libs/prisma";
-import { Prisma } from "../../generated/prisma/client";
+
 
 type OrderItemPayload = {
   medicineId: string;
@@ -35,7 +35,6 @@ const createOrder = async (customerId: string, data: CreateOrderPayload) => {
             "Insufficient stock for medicine",
           );
         }
-
         return {
           medicineId: medicine.id,
           unitPrice: medicine.price,
@@ -45,8 +44,8 @@ const createOrder = async (customerId: string, data: CreateOrderPayload) => {
     );
 
     const total = medicineChecks.reduce(
-      (sum, item) => sum.add(item.unitPrice.mul(item.quantity)),
-      new Prisma.Decimal(0),
+      (sum, item) => sum + item.unitPrice * item.quantity,
+      0,
     );
 
     const order = await tx.order.create({
