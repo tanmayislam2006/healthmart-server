@@ -24,7 +24,6 @@ const createReview = catchAsync(async (req, res) => {
 
   const result = await customerService.createReview({
     customerId: userId as string,
-    orderId: req.body.orderId,
     medicineId: req.body.medicineId,
     rating: req.body.rating,
     content: req.body.content,

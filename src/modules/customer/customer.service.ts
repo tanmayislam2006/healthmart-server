@@ -10,7 +10,6 @@ type CreateSellerRequestPayload = {
 
 type CreateReviewPayload = {
   customerId: string;
-  orderId: string;
   medicineId: string;
   rating: number;
   content: string;
@@ -57,18 +56,22 @@ const createSellerRequest = async (data: CreateSellerRequestPayload) => {
 };
 
 const createReview = async (data: CreateReviewPayload) => {
-  const { customerId, orderId, medicineId, rating, content } = data;
-
-  const order = await prisma.order.findUnique({
-    where: { id: orderId },
+  const { customerId, medicineId, rating, content } = data;
+  const orderItem = await prisma.orderItems.findFirst({
+    where: { medicineId },
     include: {
-      orderItems: true,
+      order: true,
     },
   });
 
-  if (!order) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Order not found");
+  if (!orderItem || !orderItem.order) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      "Order not found for this medicine",
+    );
   }
+
+  const order = orderItem.order;
 
   if (order.customerId !== customerId) {
     throw new ApiError(
@@ -84,21 +87,10 @@ const createReview = async (data: CreateReviewPayload) => {
     );
   }
 
-  const isMedicineInOrder = order.orderItems.some(
-    (item) => item.medicineId === medicineId,
-  );
-
-  if (!isMedicineInOrder) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      "This medicine was not part of the order",
-    );
-  }
-
   const existingReview = await prisma.review.findFirst({
     where: {
       customerId,
-      orderId,
+      orderId: order.id,
       medicineId,
     },
   });
@@ -113,7 +105,7 @@ const createReview = async (data: CreateReviewPayload) => {
   return prisma.review.create({
     data: {
       customerId,
-      orderId,
+      orderId: order.id,
       medicineId,
       rating,
       content,
