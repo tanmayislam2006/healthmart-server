@@ -26,7 +26,7 @@ model OrderItems {
     orderId    String
     medicineId String
     quantity   Int
-    price      Decimal
+    price      Float
     createdAt  DateTime @default(now())
 
     order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
