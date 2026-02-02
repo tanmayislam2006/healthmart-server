@@ -1,6 +1,6 @@
-import catchAsync from "../../helper/asyncHandler";
-import sendResponse from "../../helper/sendResponse";
-import { sellerService } from "./seller.service";
+import catchAsync from "../../helper/asyncHandler.js";
+import sendResponse from "../../helper/sendResponse.js";
+import { sellerService } from "./seller.service.js";
 import httpStatus from "http-status";
 
 const getAllMedicineBySeller = catchAsync(async (req, res) => {

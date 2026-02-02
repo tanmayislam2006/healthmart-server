@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { auth as authFromLibs } from "./../libs/auth";
-import { UserRole } from "../generated/prisma/enums";
+import { auth as authFromLibs } from "./../libs/auth.js";
+import { UserRole } from "../generated/prisma/enums.js";
 
 declare global {
   namespace Express {

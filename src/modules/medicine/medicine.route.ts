@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { medicineController } from "./medicine.controller";
+import { medicineController } from "./medicine.controller.js";
 
 const router = Router();
 router.get("/category", medicineController.getCategory);

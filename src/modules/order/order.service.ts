@@ -1,6 +1,6 @@
-import ApiError from "../../helper/apiError";
+import ApiError from "../../helper/apiError.js";
 import httpStatus from "http-status";
-import { prisma } from "../../libs/prisma";
+import { prisma } from "../../libs/prisma.js";
 
 
 type OrderItemPayload = {

@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
-import { prisma } from "../../libs/prisma";
-import ApiError from "../../helper/apiError";
-import { SRequest, UserRole } from "../../generated/prisma/enums";
+import { prisma } from "../../libs/prisma.js";
+import ApiError from "../../helper/apiError.js";
+import { SRequest, UserRole } from "../../generated/prisma/enums.js";
 
 type CreateSellerRequestPayload = {
   userId: string;

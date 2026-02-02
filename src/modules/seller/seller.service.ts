@@ -1,7 +1,7 @@
-import { prisma } from "../../libs/prisma";
-import ApiError from "../../helper/apiError";
+import { prisma } from "../../libs/prisma.js";
+import ApiError from "../../helper/apiError.js";
 import httpStatus from "http-status";
-import { OrderStatus } from "../../generated/prisma/enums";
+import { OrderStatus } from "../../generated/prisma/enums.js";
 
 const getAllMedicineBySeller = async (sellerId: string) => {
   return prisma.medicine.findMany({

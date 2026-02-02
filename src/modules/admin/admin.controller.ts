@@ -1,6 +1,6 @@
-import catchAsync from "../../helper/asyncHandler";
-import sendResponse from "../../helper/sendResponse";
-import { adminService } from "./admin.service";
+import catchAsync from "../../helper/asyncHandler.js";
+import sendResponse from "../../helper/sendResponse.js";
+import { adminService } from "./admin.service.js";
 import httpStatus from "http-status";
 
 const getAllUser = catchAsync(async (req, res) => {

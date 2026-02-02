@@ -1,5 +1,5 @@
-import { prisma } from "../libs/prisma";
-import { UserRole } from "../generated/prisma/enums";
+import { prisma } from "../libs/prisma.js";
+import { UserRole } from "../generated/prisma/enums.js";
 
 async function seedAdmin() {
   try {

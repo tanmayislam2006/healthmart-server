@@ -1,9 +1,9 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import nodemailer from "nodemailer";
-import { prisma } from "./prisma";
-import config from "../config";
-import { UserRole } from "../generated/prisma/enums";
+import { prisma } from "./prisma.js";
+import config from "../config/index.js";
+import { UserRole } from "../generated/prisma/enums.js";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",

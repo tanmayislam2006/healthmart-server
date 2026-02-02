@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
-import catchAsync from "../../helper/asyncHandler";
-import { orderService } from "./order.service";
-import sendResponse from "../../helper/sendResponse";
+import catchAsync from "../../helper/asyncHandler.js";
+import { orderService } from "./order.service.js";
+import sendResponse from "../../helper/sendResponse.js";
 
 const createOrder = catchAsync(async (req, res) => {
   const userId = req.user?.id;

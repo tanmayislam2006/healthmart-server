@@ -1,14 +1,14 @@
 import express, { Application } from "express";
 import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
-import { auth } from "./libs/auth";
-import globalErrorHandler from "./helper/globalErrorHandler";
-import handleNotFound from "./helper/handleNotFound";
-import { medicineRouter } from "./modules/medicine/medicine.route";
-import { sellerRouter } from "./modules/seller/seller.route";
-import { adminRouter } from "./modules/admin/admin.route";
-import { orderRouter } from "./modules/order/order.route";
-import { customerRouter } from "./modules/customer/customer.route";
+import { auth } from "./libs/auth.js";
+import globalErrorHandler from "./helper/globalErrorHandler.js";
+import handleNotFound from "./helper/handleNotFound.js";
+import { medicineRouter } from "./modules/medicine/medicine.route.js";
+import { sellerRouter } from "./modules/seller/seller.route.js";
+import { adminRouter } from "./modules/admin/admin.route.js";
+import { orderRouter } from "./modules/order/order.route.js";
+import { customerRouter } from "./modules/customer/customer.route.js";
 
 
 const app: Application = express();

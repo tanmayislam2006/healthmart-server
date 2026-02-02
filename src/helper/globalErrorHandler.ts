@@ -1,5 +1,5 @@
 import { ErrorRequestHandler } from "express";
-import ApiError from "./apiError";
+import ApiError from "./apiError.js";
 
 
 type IGenericErrorMessages = {

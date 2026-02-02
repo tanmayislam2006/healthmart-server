@@ -1,8 +1,8 @@
-import catchAsync from "../../helper/asyncHandler";
-import sendResponse from "../../helper/sendResponse";
+import catchAsync from "../../helper/asyncHandler.js";
+import sendResponse from "../../helper/sendResponse.js";
 import httpStatus from "http-status";
-import { medicineService } from "./medicine.service";
-import paginationHelper from "../../helper/paginationHelper";
+import { medicineService } from "./medicine.service.js";
+import paginationHelper from "../../helper/paginationHelper.js";
 
 const getCategory = catchAsync(async (req, res) => {
   const result = await medicineService.getCategory();

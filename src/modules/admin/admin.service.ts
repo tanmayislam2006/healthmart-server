@@ -3,9 +3,9 @@ import {
   SRequest,
   UserRole,
   UserStatus,
-} from "../../generated/prisma/enums";
-import { prisma } from "../../libs/prisma";
-import ApiError from "../../helper/apiError";
+} from "../../generated/prisma/enums.js";
+import { prisma } from "../../libs/prisma.js";
+import ApiError from "../../helper/apiError.js";
 import httpStatus from "http-status";
 
 const getAllUser = async () => {
