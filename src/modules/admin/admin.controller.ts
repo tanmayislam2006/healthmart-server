@@ -34,7 +34,7 @@ const getAllMedicines = catchAsync(async (req, res) => {
   });
 });
 const getAdminStats = catchAsync(async (req, res) => {
-  const result = await adminService.getAllMedicines();
+  const result = await adminService.getAdminStats();
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

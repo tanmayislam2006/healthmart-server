@@ -3,6 +3,93 @@ import ApiError from "../../helper/apiError";
 import httpStatus from "http-status";
 import { OrderStatus } from "../../generated/prisma/enums";
 
+const getSellerStats = async (sellerId: string) => {
+  const [
+    totalMedicines,
+    orderStats,
+    revenueAgg,
+    recentOrders,
+    lowStockMedicines,
+  ] = await Promise.all([
+    prisma.medicine.count({
+      where: { sellerId },
+    }),
+
+    prisma.orderItems.groupBy({
+      by: ["orderId"],
+      where: {
+        medicine: { sellerId },
+      },
+      _count: true,
+    }),
+
+    prisma.orderItems.aggregate({
+      where: {
+        medicine: { sellerId },
+      },
+      _sum: {
+        price: true,
+      },
+    }),
+
+    prisma.order.findMany({
+      where: {
+        orderItems: {
+          some: {
+            medicine: { sellerId },
+          },
+        },
+      },
+      take: 5,
+      orderBy: { createdAt: "desc" },
+      include: {
+        customer: {
+          select: { name: true },
+        },
+      },
+    }),
+
+    prisma.medicine.findMany({
+      where: {
+        sellerId,
+        stock: { lte: 10 },
+      },
+      take: 5,
+      select: {
+        id: true,
+        name: true,
+        stock: true,
+      },
+    }),
+  ]);
+
+  let deliveredOrders = 0;
+  let pendingOrders = 0;
+
+  recentOrders.forEach((order) => {
+    if (order.status === OrderStatus.DELIVERED) deliveredOrders++;
+    if (order.status === OrderStatus.PLACED) pendingOrders++;
+  });
+
+  return {
+    stats: {
+      totalMedicines,
+      totalOrders: orderStats.length,
+      deliveredOrders,
+      pendingOrders,
+      totalRevenue: revenueAgg._sum.price ?? 0,
+    },
+    recentOrders: recentOrders.map((order) => ({
+      id: order.id,
+      customerName: order.customer.name,
+      total: order.total,
+      status: order.status,
+      createdAt: order.createdAt,
+    })),
+    lowStockMedicines,
+  };
+};
+
 const getAllMedicineBySeller = async (sellerId: string) => {
   return prisma.medicine.findMany({
     where: { sellerId },
@@ -93,7 +180,7 @@ const getSellerOrders = async (sellerId: string) => {
       orderItems: {
         include: {
           medicine: {
-            select: { 
+            select: {
               name: true,
               category: {
                 select: {
@@ -161,4 +248,5 @@ export const sellerService = {
   deleteMedicine,
   getSellerOrders,
   updateOrderStatus,
+  getSellerStats,
 };

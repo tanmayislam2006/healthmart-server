@@ -5,6 +5,7 @@ import { UserRole } from "../../generated/prisma/enums";
 
 const router = Router();
 
+router.get("/stats", auth(UserRole.SELLER), sellerController.getSellerStats);
 router.get(
   "/medicine",
   auth(UserRole.SELLER),

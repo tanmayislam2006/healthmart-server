@@ -3,6 +3,18 @@ import sendResponse from "../../helper/sendResponse";
 import { sellerService } from "./seller.service";
 import httpStatus from "http-status";
 
+const getSellerStats = catchAsync(async (req, res) => {
+  const userId = req?.user?.id;
+
+  const result = await sellerService.getSellerStats(userId as string);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Seller dashboard stats fetched successfully",
+    data: result,
+  });
+});
 const getAllMedicineBySeller = catchAsync(async (req, res) => {
   const userId = req?.user?.id;
 
@@ -103,4 +115,5 @@ export const sellerController = {
   deleteMedicine,
   getSellerOrders,
   updateOrderStatus,
+  getSellerStats,
 };
