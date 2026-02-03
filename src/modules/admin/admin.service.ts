@@ -7,6 +7,69 @@ import {
 import { prisma } from "../../libs/prisma";
 import ApiError from "../../helper/apiError";
 import httpStatus from "http-status";
+import { OrderStatus } from "../../generated/prisma";
+
+const getAdminStats = async () => {
+  const [
+    totalOrders,
+    totalRevenue,
+    totalMedicines,
+    totalCategories,
+    deliveredOrders,
+    recentOrders,
+  ] = await Promise.all([
+    prisma.order.count(),
+
+    prisma.order.aggregate({
+      _sum: {
+        total: true,
+      },
+    }),
+
+    prisma.medicine.count(),
+
+    prisma.categories.count(),
+
+    prisma.order.count({
+      where: {
+        status: OrderStatus.DELIVERED,
+      },
+    }),
+
+    prisma.order.findMany({
+      take: 5,
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        customer: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+    }),
+  ]);
+
+  return {
+    stats: {
+      totalOrders,
+      totalRevenue: totalRevenue._sum.total ?? 0,
+      totalMedicines,
+      totalCategories,
+      deliveredOrders,
+    },
+    recentOrders: recentOrders.map((order) => ({
+      id: order.id,
+      customerName: order.customer.name,
+      customerEmail: order.customer.email,
+      total: order.total,
+      status: order.status,
+      createdAt: order.createdAt,
+    })),
+  };
+};
 
 const getAllUser = async () => {
   return prisma.user.findMany({
@@ -181,5 +244,6 @@ export const adminService = {
   getAllCategories,
   updateCategory,
   getAllSellerRequests,
-  updateSellerRequestStatus
+  updateSellerRequestStatus,
+  getAdminStats
 };

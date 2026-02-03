@@ -33,6 +33,15 @@ const getAllMedicines = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getAdminStats = catchAsync(async (req, res) => {
+  const result = await adminService.getAllMedicines();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Admin dashboard stats fetched successfully",
+    data: result,
+  });
+});
 
 const getAllOrders = catchAsync(async (req, res) => {
   const result = await adminService.getAllOrders();
@@ -111,5 +120,6 @@ export const adminController = {
   getAllCategories,
   updateCategory,
   getAllSellerRequests,
-  updateSellerRequestStatus
+  updateSellerRequestStatus,
+  getAdminStats
 };
