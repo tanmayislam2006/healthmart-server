@@ -3,6 +3,18 @@ import catchAsync from "../../helper/asyncHandler";
 import sendResponse from "../../helper/sendResponse";
 import { customerService } from "./customer.service";
 
+const getCustomerStats = catchAsync(async (req, res) => {
+  const userId = req.user?.id;
+
+  const result = await customerService.getCustomerStats(userId as string);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Customer dashboard stats fetched successfully",
+    data: result,
+  });
+});
 const createSellerRequest = catchAsync(async (req, res) => {
   const userId = req.user?.id;
 
@@ -40,4 +52,5 @@ const createReview = catchAsync(async (req, res) => {
 export const customerController = {
   createSellerRequest,
   createReview,
+  getCustomerStats,
 };

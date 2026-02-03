@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import { prisma } from "../../libs/prisma";
 import ApiError from "../../helper/apiError";
 import { SRequest, UserRole } from "../../generated/prisma/enums";
+import { OrderStatus } from "../../generated/prisma";
 
 type CreateSellerRequestPayload = {
   userId: string;
@@ -13,6 +14,69 @@ type CreateReviewPayload = {
   medicineId: string;
   rating: number;
   content: string;
+};
+
+
+
+export const getCustomerStats = async (customerId: string) => {
+  const [
+    totalOrders,
+    deliveredOrders,
+    pendingOrders,
+    totalSpentAgg,
+    recentOrders,
+  ] = await Promise.all([
+    prisma.order.count({
+      where: { customerId },
+    }),
+
+    prisma.order.count({
+      where: {
+        customerId,
+        status: OrderStatus.DELIVERED,
+      },
+    }),
+
+    prisma.order.count({
+      where: {
+        customerId,
+        status: OrderStatus.PLACED,
+      },
+    }),
+
+    prisma.order.aggregate({
+      where: { customerId },
+      _sum: {
+        total: true,
+      },
+    }),
+
+    prisma.order.findMany({
+      where: { customerId },
+      select: {
+        id: true,
+        total: true,
+        status: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    }),
+  ]);
+
+  return {
+    success: true,
+    message: "Customer dashboard stats fetched successfully",
+    data: {
+      stats: {
+        totalOrders,
+        totalSpent: totalSpentAgg._sum.total ?? 0,
+        deliveredOrders,
+        pendingOrders,
+      },
+      recentOrders,
+    },
+  };
 };
 
 const createSellerRequest = async (data: CreateSellerRequestPayload) => {
@@ -116,4 +180,5 @@ const createReview = async (data: CreateReviewPayload) => {
 export const customerService = {
   createSellerRequest,
   createReview,
+  getCustomerStats
 };

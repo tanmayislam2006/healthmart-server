@@ -5,6 +5,11 @@ import { customerController } from "./customer.controller";
 
 const router = Router();
 
+router.get(
+  "/stats",
+  auth(UserRole.CUSTOMER),
+  customerController.getCustomerStats
+);
 router.post(
   "/seller-request",
   auth(UserRole.CUSTOMER),
