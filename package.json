@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "prisma generate && tsc",
+    "build": "prisma generate && tsup --config tsup.config.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx tsx watch src/server.ts"
+    "start": "npx tsx watch src/server.ts",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
     "@types/nodemailer": "^7.0.4",
     "@types/pg": "^8.16.0",
     "prisma": "^7.2.0",
+    "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
