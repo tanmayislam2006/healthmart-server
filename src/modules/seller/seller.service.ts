@@ -7,6 +7,8 @@ const getSellerStats = async (sellerId: string) => {
   const [
     totalMedicines,
     orderStats,
+    deliveredOrders,
+    pendingOrders,
     revenueAgg,
     recentOrders,
     lowStockMedicines,
@@ -21,6 +23,28 @@ const getSellerStats = async (sellerId: string) => {
         medicine: { sellerId },
       },
       _count: true,
+    }),
+
+    prisma.order.count({
+      where: {
+        status: OrderStatus.DELIVERED,
+        orderItems: {
+          some: {
+            medicine: { sellerId },
+          },
+        },
+      },
+    }),
+
+    prisma.order.count({
+      where: {
+        status: { in: [OrderStatus.PLACED, OrderStatus.SHIPPED] },
+        orderItems: {
+          some: {
+            medicine: { sellerId },
+          },
+        },
+      },
     }),
 
     prisma.orderItems.aggregate({
@@ -62,14 +86,6 @@ const getSellerStats = async (sellerId: string) => {
       },
     }),
   ]);
-
-  let deliveredOrders = 0;
-  let pendingOrders = 0;
-
-  recentOrders.forEach((order) => {
-    if (order.status === OrderStatus.DELIVERED) deliveredOrders++;
-    if (order.status === OrderStatus.PLACED) pendingOrders++;
-  });
 
   return {
     stats: {

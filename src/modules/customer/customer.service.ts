@@ -38,7 +38,7 @@ type CreateReviewPayload = {
     prisma.order.count({
       where: {
         customerId,
-        status: OrderStatus.PLACED,
+        status: { in: [OrderStatus.PLACED, OrderStatus.SHIPPED] },
       },
     }),
 
