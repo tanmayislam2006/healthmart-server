@@ -15,12 +15,25 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const isProd = process.env.NODE_ENV === "production";
+
 export const auth = betterAuth({
+  baseURL: config.authUrl,
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
 
-  trustedOrigins: [process.env.APP_URL!, "http://localhost:3000"],
+  trustedOrigins: [
+    config.appUrl!,
+    config.authUrl!,
+    "http://localhost:3000",
+  ],
+  advanced: {
+    defaultCookieAttributes: {
+      sameSite: isProd ? "none" : "lax",
+      secure: isProd,
+    },
+  },
 
   user: {
     additionalFields: {

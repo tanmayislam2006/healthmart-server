@@ -16,9 +16,7 @@ type CreateReviewPayload = {
   content: string;
 };
 
-
-
-export const getCustomerStats = async (customerId: string) => {
+ const getCustomerStats = async (customerId: string) => {
   const [
     totalOrders,
     deliveredOrders,
@@ -40,7 +38,7 @@ export const getCustomerStats = async (customerId: string) => {
     prisma.order.count({
       where: {
         customerId,
-        status: OrderStatus.PLACED,
+        status: { in: [OrderStatus.PLACED, OrderStatus.SHIPPED] },
       },
     }),
 
@@ -65,17 +63,13 @@ export const getCustomerStats = async (customerId: string) => {
   ]);
 
   return {
-    success: true,
-    message: "Customer dashboard stats fetched successfully",
-    data: {
-      stats: {
-        totalOrders,
-        totalSpent: totalSpentAgg._sum.total ?? 0,
-        deliveredOrders,
-        pendingOrders,
-      },
-      recentOrders,
+    stats: {
+      totalOrders,
+      totalSpent: totalSpentAgg._sum.total ?? 0,
+      deliveredOrders,
+      pendingOrders,
     },
+    recentOrders,
   };
 };
 
@@ -180,5 +174,5 @@ const createReview = async (data: CreateReviewPayload) => {
 export const customerService = {
   createSellerRequest,
   createReview,
-  getCustomerStats
+  getCustomerStats,
 };

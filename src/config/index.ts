@@ -4,6 +4,7 @@ dotenv.config({ path: path.join(process.cwd(), ".env") });
 const config = {
   port: process.env.PORT,
   appUrl: process.env.APP_URL,
+  authUrl: process.env.BETTER_AUTH_URL,
   connectionString: process.env.DATABASE_URL,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
   googleClientId: process.env.GOOGLE_CLIENT_ID,
