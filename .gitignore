@@ -6,4 +6,5 @@ node_modules
 dist
 .vercel
 .env*.local
+!.env*.example
 api
