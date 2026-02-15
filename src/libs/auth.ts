@@ -3,7 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import nodemailer from "nodemailer";
 import { prisma } from "./prisma";
 import config from "../config";
-import { UserRole } from "../generated/prisma/enums";
+import { UserRole, UserStatus } from "../generated/prisma/enums";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -40,6 +40,7 @@ export const auth = betterAuth({
       role: {
         type: "string",
         defaultValue: UserRole.CUSTOMER,
+        input: false,
       },
       phone: {
         type: "string",
@@ -47,7 +48,24 @@ export const auth = betterAuth({
       },
       status: {
         type: "string",
-        defaultValue: "ACTIVE",
+        defaultValue: UserStatus.ACTIVE,
+        input: false,
+      },
+    },
+  },
+
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          return {
+            data: {
+              ...user,
+              role: UserRole.CUSTOMER,
+              status: UserStatus.ACTIVE,
+            },
+          };
+        },
       },
     },
   },
@@ -55,7 +73,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     autoSignIn: false,
-    requireEmailVerification: true,
+    requireEmailVerification: false,
   },
 
   emailVerification: {
