@@ -7,7 +7,7 @@ async function getHandler() {
   if (handler) {
     return handler;
   }
-  const mod = await import("./app-25NXBXA4.mjs");
+  const mod = await import("./app-56GJ4JJI.mjs");
   handler = mod.default;
   return handler;
 }
